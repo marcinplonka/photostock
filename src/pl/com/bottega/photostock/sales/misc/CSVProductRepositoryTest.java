@@ -9,7 +9,7 @@ public class CSVProductRepositoryTest {
 
     public static void main(String[] args) {
         ProductRepository productRepository = new CSVProductRepository(
-                "/home/maciuch/products.csv",
+                "/home/marcin/products.csv",
                 new InMemoryClientRepository());
         Product product = productRepository.get(3L);
         System.out.println(product.getNumber());

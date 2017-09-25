@@ -30,7 +30,7 @@ public class IOPlay {
     }
 
     private static void readObjects() {
-        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream("/home/maciuch/tmp/objects.bin"))) {
+        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream("/home/marcin/tmp/objects.bin"))) {
             Object o;
             while((o = ois.readObject()) != null) {
                 Person p = (Person) o;
@@ -49,7 +49,7 @@ public class IOPlay {
     }
 
     private static void writeObjects() {
-        try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("/home/maciuch/tmp/objects.bin"))) {
+        try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("/home/marcin/tmp/objects.bin"))) {
             oos.writeObject(new Person(17, "Jan Nowak"));
             oos.writeObject(new Person(22, "Janina Nowak"));
             oos.writeObject(new Person(19, "Marcin Nowak"));
@@ -63,7 +63,7 @@ public class IOPlay {
 
     private static void printWriter() {
         try (
-                OutputStream outputStream = new FileOutputStream("/home/maciuch/tmp/output.txt");
+                OutputStream outputStream = new FileOutputStream("/home/marcin/tmp/output.txt");
                 PrintStream ps = new PrintStream(outputStream)
         ) {
             ps.println("Zażółć gęślą jaźń");
@@ -77,7 +77,7 @@ public class IOPlay {
 
     private static void writer() {
         try (
-                OutputStream outputStream = new FileOutputStream("/home/maciuch/tmp/output.txt");
+                OutputStream outputStream = new FileOutputStream("/home/marcin/tmp/output.txt");
                 Writer writer = new OutputStreamWriter(outputStream, "CP1250")
         ) {
             writer.write("Zażółć gęślą jaźń\r\n");
@@ -91,7 +91,7 @@ public class IOPlay {
 
 
     private static void basicWrite() {
-        try (OutputStream outputStream = new FileOutputStream("/home/maciuch/tmp/output.txt", true)) {
+        try (OutputStream outputStream = new FileOutputStream("/home/marcin/tmp/output.txt", true)) {
             outputStream.write("Zażółć gęślą jaźń".getBytes("CP1250"));
         } catch (FileNotFoundException e) {
             System.out.println("Nie udało się otworzyć do zapisu");
@@ -102,7 +102,7 @@ public class IOPlay {
 
 
     private static void bufferedRead() {
-        try (InputStream inputStream = new FileInputStream("/home/maciuch/tmp/test.txt")) {
+        try (InputStream inputStream = new FileInputStream("/home/marcin/tmp/test.txt")) {
             InputStreamReader reader = new InputStreamReader(inputStream, "UTF8");
             BufferedReader bufferedReader = new BufferedReader(reader);
             String line;
@@ -118,7 +118,7 @@ public class IOPlay {
 
 
     private static void characterRead() {
-        try (InputStream inputStream = new FileInputStream("/home/maciuch/tmp/test.txt")) {
+        try (InputStream inputStream = new FileInputStream("/home/marcin/tmp/test.txt")) {
             InputStreamReader reader = new InputStreamReader(inputStream, "UTF8");
             System.out.println(reader.getEncoding());
             int c;
@@ -133,7 +133,7 @@ public class IOPlay {
     }
 
     private static void basicReadTryWithResources() {
-        try (InputStream inputStream = new FileInputStream("/home/maciuch/tmp/test.txt")) {
+        try (InputStream inputStream = new FileInputStream("/home/marcin/tmp/test.txt")) {
             int b;
             while ((b = inputStream.read()) != -1) {
                 System.out.print((char) b);
@@ -149,7 +149,7 @@ public class IOPlay {
     private static void basicRead() {
         InputStream inputStream = null;
         try {
-            inputStream = new FileInputStream("/home/maciuch/tmp/test.txt");
+            inputStream = new FileInputStream("/home/marcin/tmp/test.txt");
             int b;
             while ((b = inputStream.read()) != -1) {
                 System.out.print((char) b);

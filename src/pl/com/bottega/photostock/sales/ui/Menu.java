@@ -23,7 +23,7 @@ public class Menu {
             showLastItem();
             int decision = getUserDecision();
             if (wantsToQuit(decision))
-                return;
+                break;
             processAction(decision);
         }
     }
