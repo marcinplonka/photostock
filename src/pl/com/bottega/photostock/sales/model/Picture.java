@@ -30,4 +30,6 @@ public class Picture extends AbstractProduct {
     public Set<String> getTags() {
         return tags;
     }
+
+
 }

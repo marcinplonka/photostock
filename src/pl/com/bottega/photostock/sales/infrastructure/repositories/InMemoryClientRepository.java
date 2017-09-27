@@ -20,6 +20,8 @@ public class InMemoryClientRepository implements ClientRepository {
 
     @Override
     public Client get(String number) {
+        if (number.equals("null"))
+            return null;
         if (!REPO.containsKey(number))
             throw new IllegalArgumentException(String.format("No client %s found", number));
         return REPO.get(number);

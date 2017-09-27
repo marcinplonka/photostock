@@ -75,4 +75,28 @@ public abstract class AbstractProduct implements Product {
     public Long getNumber() {
         return number;
     }
+
+    public Money getPrice() {
+        return price;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public String getReservedByNumber() {
+        if (reservedBy != null) {
+            return reservedBy.getNumber();
+        } else {
+            return "null";
+        }
+    }
+
+    public String getOwnerNumber() {
+        if (owner != null) {
+            return owner.getNumber();
+        } else {
+            return "null";
+        }
+    }
 }
