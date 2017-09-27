@@ -1,14 +1,9 @@
 package pl.com.bottega.photostock.sales.infrastructure;
-
 import pl.com.bottega.photostock.sales.application.LightBoxManagement;
 import pl.com.bottega.photostock.sales.application.ProductCatalog;
 import pl.com.bottega.photostock.sales.application.PurchaseProcess;
 import pl.com.bottega.photostock.sales.infrastructure.repositories.*;
-import pl.com.bottega.photostock.sales.model.PurchaseRepository;
-import pl.com.bottega.photostock.sales.model.repositories.ClientRepository;
-import pl.com.bottega.photostock.sales.model.repositories.LightBoxRepository;
-import pl.com.bottega.photostock.sales.model.repositories.ProductRepository;
-import pl.com.bottega.photostock.sales.model.repositories.ReservationRepository;
+import pl.com.bottega.photostock.sales.model.repositories.*;
 import pl.com.bottega.photostock.sales.ui.*;
 
 import java.util.Scanner;
@@ -21,9 +16,9 @@ public class PhotostockApp {
 
     public void start() {
         Scanner scanner = new Scanner(System.in);
-        LightBoxRepository lightBoxRepository = new InMemoryLightBoxRepository();
         ClientRepository clientRepository = new InMemoryClientRepository();
-        ProductRepository productRepository = new CSVProductRepository("/home/marcin/products.csv", clientRepository);
+        ProductRepository productRepository = new CSVProductRepository("/home/marcin/repo/products.csv", clientRepository);
+        LightBoxRepository lightBoxRepository = new CSVLightBoxRepository(clientRepository, productRepository, "/home/marcin/repo/lightBoxes.csv");
         ReservationRepository reservationRepository = new InMemoryReservationRepository();
         PurchaseRepository purchaseRepository = new InMemoryPurchaseRepository();
         LightBoxManagement lightBoxManagement = new LightBoxManagement(lightBoxRepository, clientRepository,

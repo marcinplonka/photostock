@@ -38,6 +38,7 @@ public class LightBoxManagement {
         Picture picture = (Picture) product;
         lightBox.add(picture);
         lightBoxRepository.save(lightBox);
+
     }
 
     public void reserve(String lightBoxNumber, Set<Long> pictureNumbers, String reservationNumber) {
@@ -57,5 +58,9 @@ public class LightBoxManagement {
 
     public List<LightBox> getLightBoxes(String clientNumber) {
         return lightBoxRepository.getClientLightBoxes(clientNumber);
+    }
+
+    public LightBox get(String number) {
+        return lightBoxRepository.get(number);
     }
 }

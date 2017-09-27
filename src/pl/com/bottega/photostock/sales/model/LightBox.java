@@ -16,6 +16,17 @@ public class LightBox {
         this.number = UUID.randomUUID().toString();
     }
 
+    public LightBox(Client owner, String name,  String number, List<Picture> items) {
+        this(owner, name);
+        this.number = number;
+        this.items = items;
+    }
+
+    public LightBox(Client owner, String name, String number) {
+        this(owner, name);
+        this.number = number;
+    }
+
     public void add(Picture pciture) {
         if(items.contains(pciture))
             throw new IllegalStateException("Product already added");

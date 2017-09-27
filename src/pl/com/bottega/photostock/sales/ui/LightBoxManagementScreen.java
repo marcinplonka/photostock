@@ -73,7 +73,7 @@ public class LightBoxManagementScreen {
     private void selectedLightBoxActions() {
         Menu menu = new Menu(scanner);
         menu.setTitleLabel("Zarządzanie light box'em.");
-        menu.addItem("Dodaj produkt do light box'a", () -> addProductToLightBoxScreen.show(lightBox));
+        menu.addItem("Dodaj produkt do light box'a", () -> lightBox = addProductToLightBoxScreen.show(lightBox));
         menu.addItem("Zakup produkty z light box'a.", () -> purchaseLightBoxScreen.show(lightBox));
         menu.addItem("Pokaż zawartość light box'a", () -> presenter.show(lightBox));
         menu.addItem("Wybierz inny light box", this::showLightBox);
@@ -88,13 +88,13 @@ public class LightBoxManagementScreen {
         String name = scanner.nextLine();
         String clientNumber = authenticationManager.getClientNumber();
 
-        lightBoxManagement.create(clientNumber, name);
+        String currentLightBoxNumber = lightBoxManagement.create(clientNumber, name);
 
         lightBoxes = lightBoxManagement.getLightBoxes(clientNumber);
 
         System.out.println(String.format("Light box %s został dodany.", name));
 
-        lightBox = lightBoxes.get(lightBoxes.size() - 1);
+        lightBox = lightBoxManagement.get(currentLightBoxNumber);
 
         selectedLightBoxActions();
     }

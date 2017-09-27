@@ -1,5 +1,4 @@
 package pl.com.bottega.photostock.sales.infrastructure.repositories;
-
 import pl.com.bottega.photostock.sales.model.Client;
 import pl.com.bottega.photostock.sales.model.Money;
 import pl.com.bottega.photostock.sales.model.Picture;
@@ -37,7 +36,7 @@ public class CSVProductRepository implements ProductRepository {
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
             while ((line = br.readLine()) != null) {
-                Product product = convertToProduct(line);
+                Product product = toObject(line);
                 if (product.getNumber().equals(number))
                     return Optional.of(product);
             }
@@ -49,8 +48,8 @@ public class CSVProductRepository implements ProductRepository {
         }
     }
 
-    private Product convertToProduct(String line) {
-        String[] lineSplit = line.split(",");
+    private Product toObject(String lineCSV) {
+        String[] lineSplit = lineCSV.split(",");
         Long nr = Long.parseLong(lineSplit[0]);
         String[] tags = lineSplit[1].split(";");
         String[] valueAndCurrency = lineSplit[2].split(" ");
@@ -76,7 +75,7 @@ public class CSVProductRepository implements ProductRepository {
             if (br.ready()) {
                 br
                         .lines()
-                        .map(this::convertToProduct)
+                        .map(this::toObject)
                         .forEach(p -> products.put(p.getNumber(), p));
             }
             products.put(product.getNumber(), product);
@@ -105,7 +104,7 @@ public class CSVProductRepository implements ProductRepository {
             List<Product> results = new LinkedList<>();
             String line;
             while ((line = br.readLine()) != null) {
-                Product product = convertToProduct(line);
+                Product product = toObject(line);
                 if (product instanceof Picture) {
                     Picture picture = (Picture) product;
                     if (matchesCriteria(picture, client, tags, from, to))

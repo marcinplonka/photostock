@@ -16,11 +16,12 @@ public class AddProductToLightBoxScreen {
         this.scanner = scanner;
     }
 
-    public void show(LightBox lightBox) {
+    public LightBox show(LightBox lightBox) {
         System.out.println("Podaj numer obrazka, który chcesz dodać: ");
         Long pictureNumber = scanner.nextLong();
         scanner.nextLine();
         lightBoxManagement.add(lightBox.getNumber(), pictureNumber);
         System.out.println(String.format("Obrazek o numerze %d został dodany.", pictureNumber));
+        return lightBox;
     }
 }
