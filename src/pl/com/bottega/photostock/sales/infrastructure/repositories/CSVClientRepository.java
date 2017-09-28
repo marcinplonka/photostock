@@ -1,18 +1,23 @@
 package pl.com.bottega.photostock.sales.infrastructure.repositories;
 
 import pl.com.bottega.photostock.sales.model.*;
+import pl.com.bottega.photostock.sales.model.repositories.CSVRepository;
 import pl.com.bottega.photostock.sales.model.repositories.ClientRepository;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-public class CSVClientRepository implements ClientRepository {
+public class CSVClientRepository implements ClientRepository, CSVRepository {
+    private final String repoDirectoryPath;
+    private final String FILE_NAME = "clients.csv";
     private String path;
 
-    public CSVClientRepository(String path) {
-        this.path = path;
+    public CSVClientRepository(String repoDirectoryPath) {
+        this.repoDirectoryPath = repoDirectoryPath;
+        this.path = repoDirectoryPath + FILE_NAME;
     }
 
     @Override
@@ -33,11 +38,14 @@ public class CSVClientRepository implements ClientRepository {
     @Override
     public void save(Client client) {
         Map<String, Client> clients = new HashMap<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            br.lines().map(this::toObject).forEach(c -> clients.put(c.getNumber(), c));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        if (fileExists(path))
+            try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+
+                clients = br.lines().map(this::toObject).collect(Collectors.toMap(Client::getNumber, c -> c));
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
         clients.put(client.getNumber(), client);
 
@@ -52,20 +60,25 @@ public class CSVClientRepository implements ClientRepository {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
+
 
     @Override
     public Optional<Client> getByLogin(String login) {
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            return br
-                    .lines()
-                    .map(this::toObject)
-                    .filter(c -> c.getName().equals(login))
-                    .findFirst();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+            try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+                return br
+                        .lines()
+                        .map(this::toObject)
+                        .filter(c -> c.getName().equals(login))
+                        .findFirst();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+
     }
+
 
     private Client toObject(String CSVline) {
         String[] lineSplit = CSVline.split(",");

@@ -20,8 +20,8 @@ public class AddProductToLightBoxScreen {
         System.out.println("Podaj numer obrazka, który chcesz dodać: ");
         Long pictureNumber = scanner.nextLong();
         scanner.nextLine();
-        lightBoxManagement.add(lightBox.getNumber(), pictureNumber);
+        lightBoxManagement.add(lightBox.getNumber(), pictureNumber, lightBox.getOwner().getNumber());
         System.out.println(String.format("Obrazek o numerze %d został dodany.", pictureNumber));
-        return lightBox;
+        return lightBoxManagement.get(lightBox.getNumber());
     }
 }

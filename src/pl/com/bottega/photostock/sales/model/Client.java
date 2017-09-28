@@ -80,4 +80,19 @@ public abstract class Client {
     public boolean hasLogin(String login) {
         return name.equals(login);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Client)) return false;
+
+        Client client = (Client) o;
+
+        return getNumber().equals(client.getNumber());
+    }
+
+    @Override
+    public int hashCode() {
+        return getNumber().hashCode();
+    }
 }

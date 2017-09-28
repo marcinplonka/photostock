@@ -3,20 +3,25 @@ import pl.com.bottega.photostock.sales.model.Client;
 import pl.com.bottega.photostock.sales.model.Money;
 import pl.com.bottega.photostock.sales.model.Picture;
 import pl.com.bottega.photostock.sales.model.Product;
+import pl.com.bottega.photostock.sales.model.repositories.CSVRepository;
 import pl.com.bottega.photostock.sales.model.repositories.ClientRepository;
 import pl.com.bottega.photostock.sales.model.repositories.ProductRepository;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
-public class CSVProductRepository implements ProductRepository {
+public class CSVProductRepository implements ProductRepository, CSVRepository {
 
-    private String path;
+    private String repoDirectoryPath;
     private ClientRepository clientRepository;
+    private String path;
+    private final String FILE_NAME = "products.csv";
 
-    public CSVProductRepository(String path, ClientRepository clientRepository) {
-        this.path = path;
+    public CSVProductRepository(String repoDirectoryPath, ClientRepository clientRepository) {
+        this.repoDirectoryPath = repoDirectoryPath;
         this.clientRepository = clientRepository;
+        this.path = repoDirectoryPath+FILE_NAME;
     }
 
     @Override
@@ -33,7 +38,7 @@ public class CSVProductRepository implements ProductRepository {
 
     @Override
     public Optional<Product> getOptional(Long number) {
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(repoDirectoryPath+FILE_NAME))) {
             String line;
             while ((line = br.readLine()) != null) {
                 Product product = toObject(line);
@@ -48,35 +53,17 @@ public class CSVProductRepository implements ProductRepository {
         }
     }
 
-    private Product toObject(String lineCSV) {
-        String[] lineSplit = lineCSV.split(",");
-        Long nr = Long.parseLong(lineSplit[0]);
-        String[] tags = lineSplit[1].split(";");
-        String[] valueAndCurrency = lineSplit[2].split(" ");
-        Money price = Money.valueOf(Double.parseDouble(valueAndCurrency[0]), valueAndCurrency[1]);
-        boolean active = Boolean.valueOf(lineSplit[3]);
-        String reservedByNumber = lineSplit[4];
-        String ownerNumber = lineSplit[5];
-        return new Picture(
-                nr,
-                tags,
-                price,
-                clientRepository.get(reservedByNumber),
-                clientRepository.get(ownerNumber),
-                active
-        );
-    }
-
 
     @Override
     public void save(Product product) {
         Map<Long, Product> products = new HashMap<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+        if (fileExists(path))
+            try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             if (br.ready()) {
-                br
+                products = br
                         .lines()
                         .map(this::toObject)
-                        .forEach(p -> products.put(p.getNumber(), p));
+                        .collect(Collectors.toMap(Product::getNumber, p -> p));
             }
             products.put(product.getNumber(), product);
 
@@ -122,6 +109,10 @@ public class CSVProductRepository implements ProductRepository {
     }
 
     private boolean matchesCriteria(Picture picture, Client client, Set<String> tags, Money from, Money to) {
+
+        if (!picture.isActive() && !picture.getReservedByNumber().equals(client.getNumber()))
+            return false;
+
         if (tags != null && !picture.hasTags(tags))
             return false;
 
@@ -143,11 +134,34 @@ public class CSVProductRepository implements ProductRepository {
                     pic.getNumber().toString(),
                     String.join(";", pic.getTags()),
                     pic.getPrice().toString(),
-                    pic.getActive().toString(),
+                    pic.isActive().toString(),
                     pic.getReservedByNumber(),
                     pic.getOwnerNumber()
             };
         }
         return new String[6];
+    }
+
+    private Product toObject(String lineCSV) {
+        String[] lineSplit = lineCSV.split(",");
+        Long nr = Long.parseLong(lineSplit[0]);
+        String[] tags = lineSplit[1].split(";");
+        String[] valueAndCurrency = lineSplit[2].split(" ");
+        Money price = Money.valueOf(Double.parseDouble(valueAndCurrency[0]), valueAndCurrency[1]);
+        boolean active = Boolean.valueOf(lineSplit[3]);
+        Client reservedBy = null;
+        Client owner = null;
+        if (!(lineSplit[4].equals("null")))
+            reservedBy = clientRepository.get(lineSplit[4]);
+        if (!(lineSplit[5].equals("null")))
+            owner = clientRepository.get(lineSplit[5]);
+        return new Picture(
+                nr,
+                tags,
+                price,
+                reservedBy,
+                owner,
+                active
+        );
     }
 }

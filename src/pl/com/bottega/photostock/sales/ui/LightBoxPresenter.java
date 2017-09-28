@@ -14,7 +14,7 @@ public class LightBoxPresenter {
         for(Product product : lightBox.getItems())
             System.out.println(
                     String.format("%s %d. %d | %s",
-                        product.isAvailable() ? "" : "X",
+                        product.isAvailable(lightBox.getOwner()) ? "" : "X",
                         i++, product.getNumber(),
                         product.calculatePrice(client)
                     )

@@ -15,8 +15,14 @@ public class Reservation {
         this.owner = owner;
     }
 
+    public Reservation(String number, Client owner, Collection<Product> items) {
+        this.number = number;
+        this.owner = owner;
+        this.items = items;
+    }
+
     public void add(Product product) {
-        product.ensureAvailable();
+        product.ensureAvailable(owner);
 
         items.add(product);
         product.reservedPer(owner);
@@ -41,4 +47,11 @@ public class Reservation {
         return number;
     }
 
+    public Client getOwner() {
+        return owner;
+    }
+
+    public Collection<Product> getItems() {
+        return items;
+    }
 }

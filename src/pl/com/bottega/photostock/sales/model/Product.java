@@ -3,7 +3,7 @@ package pl.com.bottega.photostock.sales.model;
 public interface Product {
     Money calculatePrice(Client client);
 
-    boolean isAvailable();
+    boolean isAvailable(Client client);
 
     void reservedPer(Client client);
 
@@ -13,8 +13,8 @@ public interface Product {
 
     Long getNumber();
 
-    default void ensureAvailable() {
-        if (!isAvailable())
+    default void ensureAvailable(Client client) {
+        if (!isAvailable(client))
             throw new ProductNotAvailableException(this);
     }
 }

@@ -27,13 +27,13 @@ public abstract class AbstractProduct implements Product {
     }
 
     @Override
-    public boolean isAvailable() {
-        return active && reservedBy == null;
+    public boolean isAvailable(Client client) {
+        return active && (reservedBy == null || reservedBy.equals(client));
     }
 
     @Override
     public void reservedPer(Client client) {
-        ensureAvailable();
+        ensureAvailable(client);
         reservedBy = client;
     }
 
@@ -54,6 +54,7 @@ public abstract class AbstractProduct implements Product {
     public void soldPer(Client client) {
         checkReservation(client);
         owner = client;
+        active = false;
     }
 
     @Override
@@ -80,7 +81,7 @@ public abstract class AbstractProduct implements Product {
         return price;
     }
 
-    public Boolean getActive() {
+    public Boolean isActive() {
         return active;
     }
 

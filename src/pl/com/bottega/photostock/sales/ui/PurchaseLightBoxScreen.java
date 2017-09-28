@@ -32,13 +32,14 @@ public class PurchaseLightBoxScreen {
                 collect(Collectors.toSet());
 
         String reservationNumber = purchaseProcess.createReservation(lightBox.getOwner().getNumber());
+        String clientNumber = lightBox.getOwner().getNumber();
         lightBoxManagement.reserve(lightBox.getNumber(), numbers, reservationNumber);
-        Offer offer = purchaseProcess.calculateOffer(reservationNumber);
+        Offer offer = purchaseProcess.calculateOffer(reservationNumber, clientNumber);
         System.out.println(String.format("Cena wybranych zdjęć: %s", offer.getTotalCost()));
         System.out.print("Czy chcesz dokonać zakupu (t/n)? ");
         String decision = scanner.nextLine();
         if (decision.equals("t")) {
-            PurchaseStatus status = purchaseProcess.confirm(reservationNumber, offer);
+            PurchaseStatus status = purchaseProcess.confirm(reservationNumber, offer, clientNumber);
             if (status.equals(PurchaseStatus.SUCCESS))
                 System.out.println("Dziękujemy za udane zakupy!!!");
             else if (status.equals(PurchaseStatus.NOT_ENOUGH_FOUNDS))

@@ -29,32 +29,34 @@ public class PurchaseProcess {
         return reservation.getNumber();
     }
 
-    public void add(String reservationNumber, Long productNumber) {
-        Reservation reservation = reservationRepository.get(reservationNumber);
+    public void add(String reservationNumber, Long productNumber, String clientNumber) {
+        Reservation reservation = reservationRepository.get(reservationNumber, clientNumber);
         Product product = productRepository.get(productNumber);
         reservation.add(product);
         reservationRepository.save(reservation);
         productRepository.save(product);
     }
 
-    public Offer calculateOffer(String reservationNumber) {
-        Reservation reservation = reservationRepository.get(reservationNumber);
+    public Offer calculateOffer(String reservationNumber, String clientNumber) {
+        Reservation reservation = reservationRepository.get(reservationNumber, clientNumber);
         Offer offer = reservation.generateOffer();
         return offer;
     }
 
-    public PurchaseStatus confirm(String reservationNumber, Offer clientOffer) {
-        Offer currentOffer = calculateOffer(reservationNumber);
+    public PurchaseStatus confirm(String reservationNumber, Offer clientOffer, String clientNumber) {
+        Offer currentOffer = calculateOffer(reservationNumber, clientNumber);
         if (currentOffer.sameAs(clientOffer, TOLERANCE)) {
             Client client = currentOffer.getOwner();
             Money offerCost = clientOffer.getTotalCost();
             if (client.canAfford(offerCost)) {
                 Purchase purchase = clientOffer.purchase();
                 purchaseRepository.save(purchase);
-                clientRepository.save(client);
+                clientRepository.save(clientOffer.getOwner());
                 Collection<Product> products = clientOffer.getItems();
-                for (Product product : products)
+                for (Product product : products) {
+                    product.soldPer(client);
                     productRepository.save(product);
+                }
                 return PurchaseStatus.SUCCESS;
             } else
                 return PurchaseStatus.NOT_ENOUGH_FOUNDS;

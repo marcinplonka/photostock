@@ -6,5 +6,5 @@ public interface PurchaseRepository {
 
     void save(Purchase purchase);
 
-    Purchase get(String number);
+    Purchase get(String number, String clientNumber);
 }

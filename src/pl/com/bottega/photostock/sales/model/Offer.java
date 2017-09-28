@@ -36,6 +36,7 @@ public class Offer {
         Money cost = getTotalCost();
         Purchase purchase = new Purchase(owner, items);
         owner.charge(cost, String.format("Purchase number %s", purchase.getNumber()));
+
         return purchase;
     }
 

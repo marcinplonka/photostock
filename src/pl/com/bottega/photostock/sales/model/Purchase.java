@@ -20,7 +20,26 @@ public class Purchase {
             product.soldPer(buyer);
     }
 
+    public Purchase(String number, Collection<Product> items, Client buyer, LocalDateTime purchaseDate) {
+        this.number = number;
+        this.items = items;
+        this.buyer = buyer;
+        this.purchaseDate = purchaseDate;
+    }
+
     public String getNumber() {
         return number;
+    }
+
+    public Collection<Product> getItems() {
+        return items;
+    }
+
+    public Client getBuyer() {
+        return buyer;
+    }
+
+    public LocalDateTime getPurchaseDate() {
+        return purchaseDate;
     }
 }

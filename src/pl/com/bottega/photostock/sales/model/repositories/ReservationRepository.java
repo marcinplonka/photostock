@@ -4,7 +4,7 @@ import pl.com.bottega.photostock.sales.model.Reservation;
 
 public interface ReservationRepository {
 
-    Reservation get(String number);
+    Reservation get(String number, String clientNumber);
 
     void save(Reservation reservation);
 

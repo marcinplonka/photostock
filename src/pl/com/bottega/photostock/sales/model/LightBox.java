@@ -30,7 +30,7 @@ public class LightBox {
     public void add(Picture pciture) {
         if(items.contains(pciture))
             throw new IllegalStateException("Product already added");
-        pciture.ensureAvailable();
+        pciture.ensureAvailable(owner);
         items.add(pciture);
     }
 

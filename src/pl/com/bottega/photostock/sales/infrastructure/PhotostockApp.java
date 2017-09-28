@@ -9,6 +9,7 @@ import pl.com.bottega.photostock.sales.ui.*;
 import java.util.Scanner;
 
 public class PhotostockApp {
+    private final String REPO_DIRECTORY_PATH = "/home/marcin/repo/";
 
     public static void main(String[] args) {
         new PhotostockApp().start();
@@ -16,13 +17,12 @@ public class PhotostockApp {
 
     public void start() {
         Scanner scanner = new Scanner(System.in);
-        ClientRepository clientRepository = new CSVClientRepository("/home/marcin/repo/clients.csv");
-        ProductRepository productRepository = new CSVProductRepository("/home/marcin/repo/products.csv", clientRepository);
-        LightBoxRepository lightBoxRepository = new CSVLightBoxRepository(clientRepository, productRepository, "/home/marcin/repo/lightBoxes.csv");
-        ReservationRepository reservationRepository = new InMemoryReservationRepository();
-        PurchaseRepository purchaseRepository = new InMemoryPurchaseRepository();
-        LightBoxManagement lightBoxManagement = new LightBoxManagement(lightBoxRepository, clientRepository,
-                productRepository, reservationRepository);
+        ClientRepository clientRepository = new CSVClientRepository(REPO_DIRECTORY_PATH);
+        ProductRepository productRepository = new CSVProductRepository(REPO_DIRECTORY_PATH, clientRepository);
+        LightBoxRepository lightBoxRepository = new CSVLightBoxRepository(clientRepository, productRepository, REPO_DIRECTORY_PATH);
+        ReservationRepository reservationRepository = new CSVReservationRepository(REPO_DIRECTORY_PATH,clientRepository,productRepository);
+        PurchaseRepository purchaseRepository = new CSVPurchaseRepository(REPO_DIRECTORY_PATH, clientRepository, productRepository);
+        LightBoxManagement lightBoxManagement = new LightBoxManagement(lightBoxRepository, clientRepository, productRepository, reservationRepository);
         AuthenticationManager authenticationManager = new AuthenticationManager(clientRepository);
         AddProductToLightBoxScreen addProductToLightBoxScreen = new AddProductToLightBoxScreen(lightBoxManagement, scanner);
         PurchaseProcess purchaseProcess = new PurchaseProcess(clientRepository, reservationRepository, productRepository, purchaseRepository);

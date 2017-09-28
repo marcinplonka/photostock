@@ -30,25 +30,33 @@ public class LightBoxManagement {
         return lbox.getNumber();
     }
 
-    public void add(String lightBoxNumber, Long productNumber) {
+    public void add(String lightBoxNumber, Long productNumber, String clientNumber) {
+        Client client = clientRepository.get(clientNumber);
         Product product = productRepository.get(productNumber);
+        if (product.isAvailable(client))
+            product.reservedPer(client);
         if(!(product instanceof Picture))
             throw new IllegalArgumentException("Can only add pictures to repository");
         LightBox lightBox = lightBoxRepository.get(lightBoxNumber);
         Picture picture = (Picture) product;
         lightBox.add(picture);
         lightBoxRepository.save(lightBox);
+        productRepository.save(picture);
+
 
     }
 
     public void reserve(String lightBoxNumber, Set<Long> pictureNumbers, String reservationNumber) {
         LightBox lightBox = lightBoxRepository.get(lightBoxNumber);
-        Reservation reservation = reservationRepository.get(reservationNumber);
+        String clientNumber = lightBox.getOwner().getNumber();
+        Client client = clientRepository.get(clientNumber);
+        Reservation reservation = reservationRepository.get(reservationNumber, clientNumber);
         List<Picture> pictures = lightBox.getPictures(pictureNumbers);
+
         if(pictureNumbers.size() != pictures.size())
             throw new IllegalArgumentException("Invalid product numbers");
         for(Picture picture : pictures)
-            picture.ensureAvailable();
+            picture.ensureAvailable(client);
         for(Picture picture : pictures) {
             reservation.add(picture);
             productRepository.save(picture);
