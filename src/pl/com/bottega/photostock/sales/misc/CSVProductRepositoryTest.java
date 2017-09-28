@@ -1,15 +1,13 @@
 package pl.com.bottega.photostock.sales.misc;
 
+import pl.com.bottega.photostock.sales.infrastructure.repositories.CSVClientRepository;
 import pl.com.bottega.photostock.sales.infrastructure.repositories.CSVProductRepository;
-import pl.com.bottega.photostock.sales.infrastructure.repositories.InMemoryClientRepository;
-import pl.com.bottega.photostock.sales.model.Client;
 import pl.com.bottega.photostock.sales.model.Money;
 import pl.com.bottega.photostock.sales.model.Picture;
 import pl.com.bottega.photostock.sales.model.Product;
 import pl.com.bottega.photostock.sales.model.repositories.ClientRepository;
 import pl.com.bottega.photostock.sales.model.repositories.ProductRepository;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,7 +24,7 @@ public class CSVProductRepositoryTest {
         Product p2 = new Picture(2L, tags, Money.valueOf(5));
         Product p3 = new Picture(3L, tags, Money.valueOf(15));
 
-        ClientRepository clientRepository = new InMemoryClientRepository();
+        ClientRepository clientRepository = new CSVClientRepository("/home/marcin/repo/clients.csv");
         ProductRepository productRepository = new CSVProductRepository(
                 "/home/marcin/products.csv",
                 clientRepository);

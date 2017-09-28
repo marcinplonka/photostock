@@ -15,4 +15,9 @@ public class Address {
     public Address(String line1, String country, String city, String postalCode) {
         this(line1, null, country, city, postalCode);
     }
+
+    @Override
+    public String toString() {
+                return line1+";"+line2+";"+country+";"+city+";"+postalCode;
+    }
 }

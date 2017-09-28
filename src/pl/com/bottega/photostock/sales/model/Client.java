@@ -21,6 +21,15 @@ public abstract class Client {
         this.number = UUID.randomUUID().toString();
     }
 
+    public Client(String name, String number, Address address, ClientStatus status, Money balance) {
+        this.number = number;
+        this.name = name;
+        this.address = address;
+        this.status = status;
+        if(balance.gt(Money.ZERO))
+            transactions.add(new Transaction(balance, "First charge"));
+    }
+
     public Client(String name, Address address) {
         this(name, address, ClientStatus.STANDARD, Money.ZERO);
     }
@@ -54,6 +63,18 @@ public abstract class Client {
 
     public String getNumber() {
         return number;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
     public boolean hasLogin(String login) {

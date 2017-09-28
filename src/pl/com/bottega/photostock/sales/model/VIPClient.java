@@ -13,8 +13,17 @@ public class VIPClient extends Client {
         this(name, address, ClientStatus.VIP, Money.ZERO, Money.ZERO);
     }
 
+    public VIPClient(String name, String number, Address address, ClientStatus status, Money balance, Money creditLimit) {
+        super(name, number, address, status, balance);
+        this.creditLimit = creditLimit;
+    }
+
+
     public boolean canAfford(Money amount) {
         return amount.lte(balance().add(creditLimit));
     }
 
+    public Money getCreditLimit() {
+        return creditLimit;
+    }
 }

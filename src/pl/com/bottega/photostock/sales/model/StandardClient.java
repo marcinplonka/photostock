@@ -10,6 +10,10 @@ public class StandardClient extends Client {
         super(name, address);
     }
 
+    public StandardClient(String number, String name, Address address, ClientStatus status, Money balance) {
+        super(number, name, address, status, balance);
+    }
+
     public boolean canAfford(Money amount) {
         return amount.lte(balance());
     }
