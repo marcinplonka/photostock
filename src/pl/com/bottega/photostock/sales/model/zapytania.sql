@@ -1,0 +1,1 @@
+CREATE TABLE autors (id INT, firstname VARCHAR(50), lastname VARCHAR950), nationality CHAR(2), date_of_birdth DATE, date_of_death DATE);
