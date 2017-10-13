@@ -4,8 +4,6 @@ package pl.com.bottega.photostock.sales.misc;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.logging.Level;
@@ -21,7 +19,6 @@ public class FileServer {
 
     }
 
-    private List<Client> clients = new Vector<>();
     private BlockingQueue<Socket> sockets = new LinkedBlockingDeque<>(5);
 
     public void work() throws Exception {
@@ -30,19 +27,16 @@ public class FileServer {
             Socket clientSocket = serverSocket.accept();
             LOGGER.info(String.format("Client socket %s created", clientSocket.toString()));
             sockets.offer(clientSocket);
-            Client client = new Client(this, clientSocket.getInputStream(), clientSocket.getOutputStream());
-            clients.add(client);
-            LOGGER.info(String.format("Current number of clients: %d", clients.size()));
-            client.run();
+            Client client = new Client(clientSocket.getInputStream(), clientSocket.getOutputStream());
+            new Thread(client).start();
         }
 
     }
 
     static class Client implements Runnable {
 
-        private final FileServer server;
         private final PrintWriter printWriter;
-        private BufferedReader bufferedReader;
+        private InputStreamReader inputStreamReader;
         private File file;
         private FileInputStream fileInputStream;
         private OutputStream outputStream;
@@ -51,9 +45,8 @@ public class FileServer {
             this.fileInputStream = new FileInputStream(path);
         }
 
-        public Client(FileServer server, InputStream inputStream, OutputStream outputStream) throws IOException {
-            this.server = server;
-            this.bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        public Client(InputStream inputStream, OutputStream outputStream) throws IOException {
+            this.inputStreamReader = new InputStreamReader(inputStream);
             this.printWriter = new PrintWriter(outputStream);
             this.outputStream = outputStream;
         }
@@ -61,33 +54,36 @@ public class FileServer {
         @Override
         public void run() {
             try {
-                String request = bufferedReader.readLine();
+                String request = getCommandFromClient(inputStreamReader);
                 LOGGER.info(String.format("Clients request: %s", request));
-                if (request == null) {
-                    server.clientDisconnected(this);
-                    return;
-                }
                 String path = request.substring(4).trim();
                 file = new File(path);
                 if (!file.exists() && !file.isDirectory()) {
-                    sendResponse("ERROR No such file");
-                    server.clientDisconnected(this);
-                    LOGGER.info("Client disconnected");
+                    sendResponse("ERROR No such file\n");
                     return;
                 }
                 if (file.isDirectory()) {
-                    sendResponse("ERROR File is a directory");
-                    server.clientDisconnected(this);
+                    sendResponse("ERROR File is a directory\n");
                     return;
                 }
                 setFileInputStream(path);
-                printWriter.println("OK");
+                printWriter.print("OK\n");
                 printWriter.flush();
                 sendFile();
             } catch (IOException e) {
-                server.clientDisconnected(this);
-                sendResponse("ERROR No such file");
+                sendResponse("ERROR No such file\n");
             }
+        }
+
+        private static String getCommandFromClient(InputStreamReader inputStream) throws IOException {
+            StringBuilder stringBuilder = new StringBuilder();
+                char c;
+                do {
+                    c = (char) inputStream.read();
+                    stringBuilder.append(c);
+                } while (c != '\n');
+
+            return stringBuilder.toString();
         }
 
 
@@ -97,21 +93,17 @@ public class FileServer {
             while ((part = fileInputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, part);
             }
+            outputStream.flush();
             outputStream.close();
-            server.clientDisconnected(this);
 
             LOGGER.info(String.format("File %s sended", fileInputStream.getFD().toString()));
         }
 
         private void sendResponse(String response) {
-            printWriter.println(response);
+            printWriter.print(response);
             printWriter.flush();
         }
 
-    }
-
-    private void clientDisconnected(Client client) {
-        this.clients.remove(client);
     }
 
 

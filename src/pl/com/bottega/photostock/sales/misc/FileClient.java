@@ -19,18 +19,17 @@ public class FileClient {
         PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
         System.out.println("Podaj ścieżkę do pliku na serwerze: ");
         String remotePath = scanner.nextLine();
-        printWriter.println("GET " + remotePath + "\n");
+        printWriter.print("GET " + remotePath + '\n');
         printWriter.flush();
         LOGGER.info("Request send");
         InputStream inputStream = socket.getInputStream();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        String serverResponse = bufferedReader.readLine();
+        String serverResponse = getServerResponse(inputStream);
         System.out.println(String.format("Server response: %s", serverResponse));
 
-        if (serverResponse.equals("ERROR No such file"))
+        if (serverResponse.trim().equals("ERROR No such file"))
             return;
 
-        if (serverResponse.equals("ERROR File is a directory"))
+        if (serverResponse.trim().equals("ERROR File is a directory"))
             return;
 
         System.out.println("Podaj nazwę pliku docelowego: ");
@@ -38,18 +37,34 @@ public class FileClient {
         OutputStream outputStream = new FileOutputStream(localPath + localFileName);
         LOGGER.info("Client socket created");
 
-
         if (serverResponse.trim().equals("OK")) {
-            byte[] buffer = new byte[1024];
-            int part;
-            while ((part = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, part);
-                System.out.println("0");
-            }
-            LOGGER.info(String.format("File %s transferred", localFileName));
+            getFieFromServer(inputStream, outputStream);
+            System.out.println(String.format("File %s transferred", localFileName));
         } else {
-            System.out.println(String.format("Server response: %s", serverResponse));
+            LOGGER.warning("Unknown server response, file not transferred");
         }
+    }
+
+    private static void getFieFromServer(InputStream inputStream, OutputStream outputStream) throws IOException {
+
+        byte[] buffer = new byte[1024];
+        int part;
+        while ((part = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, part);
+        }
+
+    }
+
+
+    private static String getServerResponse(InputStream inputStream) throws IOException {
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        StringBuilder stringBuilder = new StringBuilder();
+        char c;
+        do {
+            c = (char) inputStreamReader.read();
+            stringBuilder.append(c);
+        } while (c != '\n');
+        return stringBuilder.toString();
     }
 
 }
