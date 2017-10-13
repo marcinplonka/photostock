@@ -27,21 +27,24 @@ public class FileClient {
         String serverResponse = bufferedReader.readLine();
         System.out.println(String.format("Server response: %s", serverResponse));
 
-        if (serverResponse.equals("ERROR No such file")) {
-            System.out.printf("Invalid path to file: %s\n", remotePath);
+        if (serverResponse.equals("ERROR No such file"))
             return;
-        }
-        System.out.println("Podaj nazwę pliku do zapisu: ");
+
+        if (serverResponse.equals("ERROR File is a directory"))
+            return;
+
+        System.out.println("Podaj nazwę pliku docelowego: ");
         String localFileName = scanner.nextLine();
         OutputStream outputStream = new FileOutputStream(localPath + localFileName);
-        LOGGER.info("Client socked created");
+        LOGGER.info("Client socket created");
 
 
-        if (serverResponse.equals("OK")) {
+        if (serverResponse.trim().equals("OK")) {
             byte[] buffer = new byte[1024];
             int part;
             while ((part = inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, part);
+                System.out.println("0");
             }
             LOGGER.info(String.format("File %s transferred", localFileName));
         } else {

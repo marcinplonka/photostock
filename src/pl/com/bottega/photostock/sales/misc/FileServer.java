@@ -22,7 +22,7 @@ public class FileServer {
     }
 
     private List<Client> clients = new Vector<>();
-    BlockingQueue<Socket> sockets = new LinkedBlockingDeque<>(5);
+    private BlockingQueue<Socket> sockets = new LinkedBlockingDeque<>(5);
 
     public void work() throws Exception {
         ServerSocket serverSocket = new ServerSocket(6662);
@@ -65,32 +65,31 @@ public class FileServer {
                 LOGGER.info(String.format("Clients request: %s", request));
                 if (request == null) {
                     server.clientDisconnected(this);
-                } else {
-                    String path = request.substring(4).trim();
-                    file = new File(path);
-                    setFileInputStream(path);
-                    if (!file.exists()) {
-                        sendResponse("ERROR No such file");
-                        server.clientDisconnected(this);
-                        LOGGER.info("Client disconnected");
-                        return;
-                    }
-                    if (file.isDirectory()) {
-                        sendResponse("ERROR File is a directory");
-                        server.clientDisconnected(this);
-                        return;
-                    }
-                    printWriter.println("OK");
-                    printWriter.flush();
-                    sendFile();
-                    outputStream.close();
+                    return;
                 }
-
+                String path = request.substring(4).trim();
+                file = new File(path);
+                if (!file.exists() && !file.isDirectory()) {
+                    sendResponse("ERROR No such file");
+                    server.clientDisconnected(this);
+                    LOGGER.info("Client disconnected");
+                    return;
+                }
+                if (file.isDirectory()) {
+                    sendResponse("ERROR File is a directory");
+                    server.clientDisconnected(this);
+                    return;
+                }
+                setFileInputStream(path);
+                printWriter.println("OK");
+                printWriter.flush();
+                sendFile();
             } catch (IOException e) {
                 server.clientDisconnected(this);
                 sendResponse("ERROR No such file");
             }
         }
+
 
         private void sendFile() throws IOException {
             byte[] buffer = new byte[1024];
@@ -98,9 +97,7 @@ public class FileServer {
             while ((part = fileInputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, part);
             }
-
-            byte[] bytes = fileInputStream.readAllBytes();
-            outputStream.write(bytes);
+            outputStream.close();
             server.clientDisconnected(this);
 
             LOGGER.info(String.format("File %s sended", fileInputStream.getFD().toString()));
@@ -110,6 +107,7 @@ public class FileServer {
             printWriter.println(response);
             printWriter.flush();
         }
+
     }
 
     private void clientDisconnected(Client client) {
