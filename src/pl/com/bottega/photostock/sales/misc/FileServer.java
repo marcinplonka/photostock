@@ -102,6 +102,7 @@ public class FileServer {
         private void sendResponse(String response) {
             printWriter.print(response);
             printWriter.flush();
+            printWriter.close();
         }
 
     }
