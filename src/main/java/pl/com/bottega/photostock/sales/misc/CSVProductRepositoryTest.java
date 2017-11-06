@@ -1,7 +1,7 @@
 package pl.com.bottega.photostock.sales.misc;
 
-import pl.com.bottega.photostock.sales.infrastructure.repositories.CSVClientRepository;
-import pl.com.bottega.photostock.sales.infrastructure.repositories.CSVProductRepository;
+import pl.com.bottega.photostock.sales.infrastructure.repositories.csvrepositories.CSVClientRepository;
+import pl.com.bottega.photostock.sales.infrastructure.repositories.csvrepositories.CSVProductRepository;
 import pl.com.bottega.photostock.sales.model.Money;
 import pl.com.bottega.photostock.sales.model.Picture;
 import pl.com.bottega.photostock.sales.model.Product;

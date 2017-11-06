@@ -1,4 +1,4 @@
-package pl.com.bottega.photostock.sales.infrastructure.repositories;
+package pl.com.bottega.photostock.sales.infrastructure.repositories.csvrepositories;
 
 import pl.com.bottega.photostock.sales.model.Client;
 import pl.com.bottega.photostock.sales.model.LightBox;

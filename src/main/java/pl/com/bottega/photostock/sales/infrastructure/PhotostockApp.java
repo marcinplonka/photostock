@@ -2,7 +2,7 @@ package pl.com.bottega.photostock.sales.infrastructure;
 import pl.com.bottega.photostock.sales.application.LightBoxManagement;
 import pl.com.bottega.photostock.sales.application.ProductCatalog;
 import pl.com.bottega.photostock.sales.application.PurchaseProcess;
-import pl.com.bottega.photostock.sales.infrastructure.repositories.*;
+import pl.com.bottega.photostock.sales.infrastructure.repositories.csvrepositories.*;
 import pl.com.bottega.photostock.sales.model.repositories.*;
 import pl.com.bottega.photostock.sales.ui.*;
 
