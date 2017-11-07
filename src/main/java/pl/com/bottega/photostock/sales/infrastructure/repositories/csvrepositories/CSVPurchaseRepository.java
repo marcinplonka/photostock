@@ -1,6 +1,7 @@
 package pl.com.bottega.photostock.sales.infrastructure.repositories.csvrepositories;
 
 import pl.com.bottega.photostock.sales.model.Client;
+import pl.com.bottega.photostock.sales.model.IProduct;
 import pl.com.bottega.photostock.sales.model.Product;
 import pl.com.bottega.photostock.sales.model.Purchase;
 import pl.com.bottega.photostock.sales.model.repositories.CSVRepository;

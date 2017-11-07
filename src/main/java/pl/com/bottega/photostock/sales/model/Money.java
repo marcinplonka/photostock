@@ -1,5 +1,7 @@
 package pl.com.bottega.photostock.sales.model;
 
+import javax.persistence.Entity;
+
 public class Money implements Comparable<Money> {
 
     public static final String DEFAULT_CURRENCY = "CREDIT";
@@ -20,6 +22,10 @@ public class Money implements Comparable<Money> {
 
     public static Money valueOf(Integer value) {
         return valueOf(value, DEFAULT_CURRENCY);
+    }
+
+    public static Money valueOf(Long cents,  String currency) {
+        return new Money(cents, currency);
     }
 
     public static Money valueOf(Integer value, String currency) {
@@ -110,5 +116,9 @@ public class Money implements Comparable<Money> {
 
     public Money abs() {
         return new Money(Math.abs(cents), currency);
+    }
+
+    public Long value() {
+        return cents;
     }
 }

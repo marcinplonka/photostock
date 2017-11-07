@@ -5,12 +5,9 @@ import pl.com.bottega.photostock.sales.application.PurchaseProcess;
 import pl.com.bottega.photostock.sales.application.PurchaseStatus;
 import pl.com.bottega.photostock.sales.model.LightBox;
 import pl.com.bottega.photostock.sales.model.Offer;
-import pl.com.bottega.photostock.sales.model.Product;
 
-import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class PurchaseLightBoxScreen {

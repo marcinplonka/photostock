@@ -1,8 +1,27 @@
 package pl.com.bottega.photostock.sales.model;
 
-public class Address {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import java.io.Serializable;
 
-    private String line1, line2, country, city, postalCode;
+@Entity
+public class Address implements Serializable {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+    @Column(name = "line_1")
+    private String line1;
+    @Column(name = "line_2")
+    private String line2;
+    @Column(name = "country")
+    private String country;
+    @Column(name = "city")
+    private String city;
+    @Column(name = "postal_code")
+    private String postalCode;
 
     public Address(String line1, String line2, String country, String city, String postalCode) {
         this.line1 = line1;
@@ -16,8 +35,11 @@ public class Address {
         this(line1, null, country, city, postalCode);
     }
 
+    public Address() {
+    }
+
     @Override
     public String toString() {
-                return line1+";"+line2+";"+country+";"+city+";"+postalCode;
+                return "address id: "+id+"\n"+line1+"\n"+line2+"\n"+country+"\n"+city+"\n"+postalCode;
     }
 }

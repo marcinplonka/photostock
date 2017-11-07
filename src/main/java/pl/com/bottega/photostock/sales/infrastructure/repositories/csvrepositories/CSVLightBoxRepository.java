@@ -3,7 +3,7 @@ package pl.com.bottega.photostock.sales.infrastructure.repositories.csvrepositor
 import pl.com.bottega.photostock.sales.model.Client;
 import pl.com.bottega.photostock.sales.model.LightBox;
 import pl.com.bottega.photostock.sales.model.Picture;
-import pl.com.bottega.photostock.sales.model.Product;
+import pl.com.bottega.photostock.sales.model.IProduct;
 import pl.com.bottega.photostock.sales.model.repositories.CSVRepository;
 import pl.com.bottega.photostock.sales.model.repositories.ClientRepository;
 import pl.com.bottega.photostock.sales.model.repositories.LightBoxRepository;
@@ -108,7 +108,7 @@ public class CSVLightBoxRepository implements LightBoxRepository, CSVRepository 
         String[] productNumbers = lineSplit[3].split(";");
         List<Picture> items = new LinkedList<>();
         for (String nr : productNumbers) {
-            Product product;
+            IProduct product;
             if ((product = productRepository.get(Long.parseLong(nr))) instanceof Picture) {
                 Picture picture = (Picture) product;
                 items.add(picture);

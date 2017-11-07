@@ -3,7 +3,7 @@ package pl.com.bottega.photostock.sales.ui;
 import pl.com.bottega.photostock.sales.application.ProductCatalog;
 import pl.com.bottega.photostock.sales.model.Money;
 import pl.com.bottega.photostock.sales.model.Picture;
-import pl.com.bottega.photostock.sales.model.Product;
+import pl.com.bottega.photostock.sales.model.IProduct;
 
 import java.util.*;
 
@@ -28,13 +28,13 @@ public class SearchScreen {
         System.out.print("Cena do: ");
         Money priceTo = getMoney();
 
-        List<Product> productList = productCatalog.find(authenticationManager.getClient(), tags, priceFrom, priceTo);
+        List<IProduct> productList = productCatalog.find(authenticationManager.getClient(), tags, priceFrom, priceTo);
 
-        for (Product product : productList)
+        for (IProduct product : productList)
             showProduct(product);
     }
 
-    private void showProduct(Product product) {
+    private void showProduct(IProduct product) {
         String productType = product instanceof Picture ? "OBRAZEK" : "CLIP";
         String tags = "";
         if (product instanceof Picture)

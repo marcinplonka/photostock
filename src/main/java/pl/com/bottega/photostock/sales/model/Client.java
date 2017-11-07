@@ -1,39 +1,48 @@
 package pl.com.bottega.photostock.sales.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-
-public abstract class Client {
-
+@Entity
+public abstract class Client implements Serializable {
+    @Id
     private String number;
+    @Column(unique = true)
+    private String login;
     private String name;
+    @OneToOne
     private Address address;
     private ClientStatus status;
+    @OneToMany
     private List<Transaction> transactions = new LinkedList<>();
 
-    public Client(String name, Address address, ClientStatus status, Money balance) {
+    public Client(String name, Address address, ClientStatus status, Money balance, String login) {
         this.name = name;
         this.address = address;
         this.status = status;
+        this.login = login;
         if(balance.gt(Money.ZERO))
             transactions.add(new Transaction(balance, "First charge"));
         this.number = UUID.randomUUID().toString();
     }
 
-    public Client(String name, String number, Address address, ClientStatus status, Money balance) {
+    public Client(String name, String number, Address address, ClientStatus status, Money balance, String login) {
         this.number = number;
         this.name = name;
         this.address = address;
         this.status = status;
+        this.login = login;
         if(balance.gt(Money.ZERO))
             transactions.add(new Transaction(balance, "First charge"));
     }
 
-    public Client(String name, Address address) {
-        this(name, address, ClientStatus.STANDARD, Money.ZERO);
+    public Client(String name, Address address, String login) {
+        this(name, address, ClientStatus.STANDARD, Money.ZERO, login);
+    }
+
+    protected Client() {
     }
 
     public abstract boolean canAfford(Money amount);
@@ -80,7 +89,7 @@ public abstract class Client {
     }
 
     public boolean hasLogin(String login) {
-        return name.equals(login);
+        return login.equals(login);
     }
 
     @Override

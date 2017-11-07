@@ -52,8 +52,8 @@ public class PurchaseProcess {
                 Purchase purchase = clientOffer.purchase();
                 purchaseRepository.save(purchase);
                 clientRepository.save(clientOffer.getOwner());
-                Collection<Product> products = clientOffer.getItems();
-                for (Product product : products) {
+                Collection<IProduct> products = clientOffer.getItems();
+                for (IProduct product : products) {
                     product.soldPer(client);
                     productRepository.save(product);
                 }

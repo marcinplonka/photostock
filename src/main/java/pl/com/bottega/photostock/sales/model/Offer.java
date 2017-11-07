@@ -2,6 +2,7 @@ package pl.com.bottega.photostock.sales.model;
 
 import java.util.*;
 
+
 public class Offer {
 
     private Client owner;
@@ -23,12 +24,12 @@ public class Offer {
 
     public Money getTotalCost() {
         Money total = Money.ZERO;
-        for (Product item : items)
+        for (IProduct item : items)
             total = total.add(item.calculatePrice(owner));
         return total;
     }
 
-    public Collection<Product> getItems() {
+    public Collection<IProduct> getItems() {
         return Collections.unmodifiableCollection(items);
     }
 

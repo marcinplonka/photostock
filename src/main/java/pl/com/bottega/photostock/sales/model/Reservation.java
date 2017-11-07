@@ -1,17 +1,21 @@
 package pl.com.bottega.photostock.sales.model;
 
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.UUID;
-
+@Entity
 public class Reservation {
 
-    private Client owner;
-    private Collection<Product> items = new LinkedList<>();
+    @Id
+    @GeneratedValue
     private String number;
+    @ManyToOne
+    private Client owner;
+    @OneToMany
+    private Collection<Product> items = new LinkedList<>();
 
     public Reservation(Client owner) {
-        this.number = UUID.randomUUID().toString();
         this.owner = owner;
     }
 
@@ -21,6 +25,9 @@ public class Reservation {
         this.items = items;
     }
 
+    public Reservation() {
+    }
+
     public void add(Product product) {
         product.ensureAvailable(owner);
 
@@ -28,7 +35,7 @@ public class Reservation {
         product.reservedPer(owner);
     }
 
-    public void remove(Product product) {
+    public void remove(IProduct product) {
         if (items.remove(product))
             product.unreservedPer(owner);
         else

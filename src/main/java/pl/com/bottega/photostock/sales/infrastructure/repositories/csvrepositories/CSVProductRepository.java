@@ -1,8 +1,5 @@
 package pl.com.bottega.photostock.sales.infrastructure.repositories.csvrepositories;
-import pl.com.bottega.photostock.sales.model.Client;
-import pl.com.bottega.photostock.sales.model.Money;
-import pl.com.bottega.photostock.sales.model.Picture;
-import pl.com.bottega.photostock.sales.model.Product;
+import pl.com.bottega.photostock.sales.model.*;
 import pl.com.bottega.photostock.sales.model.repositories.CSVRepository;
 import pl.com.bottega.photostock.sales.model.repositories.ClientRepository;
 import pl.com.bottega.photostock.sales.model.repositories.ProductRepository;
@@ -55,15 +52,15 @@ public class CSVProductRepository implements ProductRepository, CSVRepository {
 
 
     @Override
-    public void save(Product product) {
-        Map<Long, Product> products = new HashMap<>();
+    public void save(IProduct product) {
+        Map<Long, IProduct> products = new HashMap<>();
         if (fileExists(path))
             try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             if (br.ready()) {
                 products = br
                         .lines()
                         .map(this::toObject)
-                        .collect(Collectors.toMap(Product::getNumber, p -> p));
+                        .collect(Collectors.toMap(IProduct::getNumber, p -> p));
             }
             products.put(product.getNumber(), product);
 
@@ -75,7 +72,7 @@ public class CSVProductRepository implements ProductRepository, CSVRepository {
 
         try (OutputStream outputStream = new FileOutputStream(path, false);
              PrintStream printStream = new PrintStream(outputStream)) {
-            for (Product p : products.values()) {
+            for (IProduct p : products.values()) {
                 printStream.println(String.join(",", toLine(p)));
             }
             printStream.flush();
@@ -86,12 +83,12 @@ public class CSVProductRepository implements ProductRepository, CSVRepository {
     }
 
     @Override
-    public List<Product> find(Client client, Set<String> tags, Money from, Money to) {
+    public List<IProduct> find(Client client, Set<String> tags, Money from, Money to) {
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            List<Product> results = new LinkedList<>();
+            List<IProduct> results = new LinkedList<>();
             String line;
             while ((line = br.readLine()) != null) {
-                Product product = toObject(line);
+                IProduct product = toObject(line);
                 if (product instanceof Picture) {
                     Picture picture = (Picture) product;
                     if (matchesCriteria(picture, client, tags, from, to))
@@ -127,7 +124,7 @@ public class CSVProductRepository implements ProductRepository, CSVRepository {
         return true;
     }
 
-    private String[] toLine(Product p) {
+    private String[] toLine(IProduct p) {
         if (p instanceof Picture) {
             Picture pic = (Picture) p;
             return new String[] {
@@ -156,7 +153,6 @@ public class CSVProductRepository implements ProductRepository, CSVRepository {
         if (!(lineSplit[5].equals("null")))
             owner = clientRepository.get(lineSplit[5]);
         return new Picture(
-                nr,
                 tags,
                 price,
                 reservedBy,

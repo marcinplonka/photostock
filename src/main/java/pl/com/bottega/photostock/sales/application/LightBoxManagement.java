@@ -32,7 +32,7 @@ public class LightBoxManagement {
 
     public void add(String lightBoxNumber, Long productNumber, String clientNumber) {
         Client client = clientRepository.get(clientNumber);
-        Product product = productRepository.get(productNumber);
+        IProduct product = productRepository.get(productNumber);
         if (product.isAvailable(client))
             product.reservedPer(client);
         if(!(product instanceof Picture))

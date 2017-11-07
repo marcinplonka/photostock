@@ -2,7 +2,7 @@ package pl.com.bottega.photostock.sales.ui;
 
 import pl.com.bottega.photostock.sales.model.LightBox;
 import pl.com.bottega.photostock.sales.model.Client;
-import pl.com.bottega.photostock.sales.model.Product;
+import pl.com.bottega.photostock.sales.model.IProduct;
 
 public class LightBoxPresenter {
 
@@ -11,7 +11,7 @@ public class LightBoxPresenter {
         System.out.println("-------------------------------------");
         int i = 1;
         Client client = lightBox.getOwner();
-        for(Product product : lightBox.getItems())
+        for(IProduct product : lightBox.getItems())
             System.out.println(
                     String.format("%s %d. %d | %s",
                         product.isAvailable(lightBox.getOwner()) ? "" : "X",

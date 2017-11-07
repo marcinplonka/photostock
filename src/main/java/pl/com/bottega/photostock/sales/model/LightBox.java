@@ -1,19 +1,27 @@
 package pl.com.bottega.photostock.sales.model;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.*;
 
-public class LightBox {
 
+@Entity
+@Table
+public class LightBox implements Serializable {
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    private String number;
+    @Column(name = "name")
     private String name;
+    @OneToMany
     private List<Picture> items = new LinkedList<>();
 
     private Client owner;
-    private String number;
 
     public LightBox(Client owner, String name) {
         this.owner = owner;
         this.name = name;
-        this.number = UUID.randomUUID().toString();
     }
 
     public LightBox(Client owner, String name,  String number, List<Picture> items) {
@@ -25,6 +33,9 @@ public class LightBox {
     public LightBox(Client owner, String name, String number) {
         this(owner, name);
         this.number = number;
+    }
+
+    public LightBox() {
     }
 
     public void add(Picture pciture) {
@@ -47,7 +58,7 @@ public class LightBox {
         return owner;
     }
 
-    public List<Product> getItems() {
+    public List<IProduct> getItems() {
         return Collections.unmodifiableList(items);
     }
 
