@@ -17,7 +17,7 @@ public interface ProductRepository {
     Optional<Product> getOptional(Long number);
 
     // zapis nowego lub aktualizacja istniejacego obiektu
-    void save(IProduct product);
+    void save(Product product);
 
-    List<IProduct> find(Client client, Set<String> tags, Money from, Money to);
+    List<Product> find(Client client, Set<String> tags, Money from, Money to);
 }

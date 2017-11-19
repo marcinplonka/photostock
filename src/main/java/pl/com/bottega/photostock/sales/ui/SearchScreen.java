@@ -1,17 +1,26 @@
 package pl.com.bottega.photostock.sales.ui;
 
+import org.springframework.stereotype.Component;
 import pl.com.bottega.photostock.sales.application.ProductCatalog;
 import pl.com.bottega.photostock.sales.model.Money;
 import pl.com.bottega.photostock.sales.model.Picture;
 import pl.com.bottega.photostock.sales.model.IProduct;
+import pl.com.bottega.photostock.sales.model.Product;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class SearchScreen {
+
+@Component
+public class SearchScreen implements Serializable {
 
     private Scanner scanner;
     private AuthenticationManager authenticationManager;
     private ProductCatalog productCatalog;
+
+
+    public SearchScreen() {
+    }
 
     public SearchScreen(Scanner scanner, AuthenticationManager authenticationManager, ProductCatalog productCatalog) {
         this.scanner = scanner;
@@ -28,9 +37,9 @@ public class SearchScreen {
         System.out.print("Cena do: ");
         Money priceTo = getMoney();
 
-        List<IProduct> productList = productCatalog.find(authenticationManager.getClient(), tags, priceFrom, priceTo);
+        List<Product> productList = productCatalog.find(authenticationManager.getClient(), tags, priceFrom, priceTo);
 
-        for (IProduct product : productList)
+        for (Product product : productList)
             showProduct(product);
     }
 
@@ -62,4 +71,6 @@ public class SearchScreen {
         tags.remove("");
         return tags;
     }
+
+
 }

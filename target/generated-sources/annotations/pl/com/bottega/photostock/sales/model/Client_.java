@@ -11,6 +11,7 @@ public abstract class Client_ {
 
 	public static volatile SingularAttribute<Client, String> number;
 	public static volatile SingularAttribute<Client, Address> address;
+	public static volatile ListAttribute<Client, LightBox> lightBoxes;
 	public static volatile SingularAttribute<Client, String> name;
 	public static volatile ListAttribute<Client, Transaction> transactions;
 	public static volatile SingularAttribute<Client, ClientStatus> status;

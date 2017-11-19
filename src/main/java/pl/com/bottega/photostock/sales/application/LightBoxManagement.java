@@ -1,5 +1,7 @@
 package pl.com.bottega.photostock.sales.application;
 
+import org.springframework.stereotype.Component;
+import pl.com.bottega.photostock.sales.infrastructure.repositories.jparepositories.NoSuchEntityExeption;
 import pl.com.bottega.photostock.sales.model.*;
 import pl.com.bottega.photostock.sales.model.repositories.ClientRepository;
 import pl.com.bottega.photostock.sales.model.repositories.LightBoxRepository;
@@ -8,7 +10,7 @@ import pl.com.bottega.photostock.sales.model.repositories.ReservationRepository;
 
 import java.util.List;
 import java.util.Set;
-
+@Component
 public class LightBoxManagement {
 
     private LightBoxRepository lightBoxRepository;
@@ -37,7 +39,14 @@ public class LightBoxManagement {
             product.reservedPer(client);
         if(!(product instanceof Picture))
             throw new IllegalArgumentException("Can only add pictures to repository");
-        LightBox lightBox = lightBoxRepository.get(lightBoxNumber);
+
+        LightBox lightBox = null;
+        try {
+            lightBox = lightBoxRepository.get(lightBoxNumber);
+        } catch (NoSuchEntityExeption entityExeption) {
+
+            System.out.println("Lighbox number: "+lightBoxNumber+"wasn't found.");
+        }
         Picture picture = (Picture) product;
         lightBox.add(picture);
         lightBoxRepository.save(lightBox);
@@ -47,7 +56,12 @@ public class LightBoxManagement {
     }
 
     public void reserve(String lightBoxNumber, Set<Long> pictureNumbers, String reservationNumber) {
-        LightBox lightBox = lightBoxRepository.get(lightBoxNumber);
+        LightBox lightBox = null;
+        try {
+            lightBox = lightBoxRepository.get(lightBoxNumber);
+        } catch (NoSuchEntityExeption entityExeption) {
+            System.out.println("Lightbox number: "+lightBoxNumber+"wasn't found");
+        }
         String clientNumber = lightBox.getOwner().getNumber();
         Client client = clientRepository.get(clientNumber);
         Reservation reservation = reservationRepository.get(reservationNumber, clientNumber);
@@ -69,6 +83,11 @@ public class LightBoxManagement {
     }
 
     public LightBox get(String number) {
-        return lightBoxRepository.get(number);
+        try {
+            return lightBoxRepository.get(number);
+        } catch (NoSuchEntityExeption entityExeption) {
+            System.out.println("There is ");
+        }
+        return null;
     }
 }

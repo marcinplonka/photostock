@@ -1,5 +1,7 @@
 package pl.com.bottega.photostock.sales.ui;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Scanner;
 
 public class MainScreen {

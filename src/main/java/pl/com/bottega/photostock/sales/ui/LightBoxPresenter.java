@@ -1,9 +1,9 @@
 package pl.com.bottega.photostock.sales.ui;
 
+import org.springframework.stereotype.Component;
 import pl.com.bottega.photostock.sales.model.LightBox;
 import pl.com.bottega.photostock.sales.model.Client;
 import pl.com.bottega.photostock.sales.model.IProduct;
-
 public class LightBoxPresenter {
 
     public void show(LightBox lightBox) {

@@ -1,9 +1,12 @@
 package pl.com.bottega.photostock.sales.ui;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Scanner;
 
-public class AuthenticationScreen {
 
+
+public class AuthenticationScreen {
     private Scanner scanner;
     private AuthenticationManager authenticationManager;
 

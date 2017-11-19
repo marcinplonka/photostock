@@ -1,5 +1,6 @@
 package pl.com.bottega.photostock.sales.ui;
 
+import org.springframework.stereotype.Component;
 import pl.com.bottega.photostock.sales.application.LightBoxManagement;
 import pl.com.bottega.photostock.sales.application.PurchaseProcess;
 import pl.com.bottega.photostock.sales.application.PurchaseStatus;
@@ -9,7 +10,6 @@ import pl.com.bottega.photostock.sales.model.Offer;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 public class PurchaseLightBoxScreen {
 
     private LightBoxManagement lightBoxManagement;

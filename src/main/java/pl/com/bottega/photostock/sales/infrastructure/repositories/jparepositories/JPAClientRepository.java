@@ -1,5 +1,6 @@
 package pl.com.bottega.photostock.sales.infrastructure.repositories.jparepositories;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.com.bottega.photostock.sales.model.Client;
 import pl.com.bottega.photostock.sales.model.repositories.ClientRepository;
@@ -13,7 +14,12 @@ import java.util.Optional;
 
 @Component
 public class JPAClientRepository implements ClientRepository {
+    @Autowired
     EntityManager em;
+
+    public JPAClientRepository(EntityManager em) {
+        this.em = em;
+    }
 
     @Override
     public Client get(String number) {
@@ -23,13 +29,14 @@ public class JPAClientRepository implements ClientRepository {
     @Override
     @Transactional
     public void save(Client client) {
-        em.persist(client);
-
+        em.merge(client);
     }
 
     @Override
     public Optional<Client> getByLogin(String login) {
-        return Optional.of((Client) em.createNativeQuery("SELECT * FROM Client c WHERE c.login LIKE :login"
-                , Client.class).setParameter("login", login).getSingleResult());
+        Query q = em.createNativeQuery("SELECT * FROM Client c WHERE c.name LIKE :login", Client.class)
+                .setParameter("login", login);
+        Client client = (Client) q.getSingleResult();
+        return Optional.of(client);
     }
 }

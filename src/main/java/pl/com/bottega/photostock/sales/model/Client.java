@@ -10,39 +10,29 @@ public abstract class Client implements Serializable {
     @Id
     private String number;
     @Column(unique = true)
-    private String login;
     private String name;
     @OneToOne
     private Address address;
     private ClientStatus status;
     @OneToMany
     private List<Transaction> transactions = new LinkedList<>();
+    @OneToMany
+    private List<LightBox> lightBoxes;
 
-    public Client(String name, Address address, ClientStatus status, Money balance, String login) {
+    public Client(String name, Address address, ClientStatus status, Money balance) {
         this.name = name;
         this.address = address;
         this.status = status;
-        this.login = login;
         if(balance.gt(Money.ZERO))
             transactions.add(new Transaction(balance, "First charge"));
         this.number = UUID.randomUUID().toString();
     }
 
-    public Client(String name, String number, Address address, ClientStatus status, Money balance, String login) {
-        this.number = number;
-        this.name = name;
-        this.address = address;
-        this.status = status;
-        this.login = login;
-        if(balance.gt(Money.ZERO))
-            transactions.add(new Transaction(balance, "First charge"));
+    public Client(String name, Address address) {
+        this(name, address, ClientStatus.STANDARD, Money.ZERO);
     }
 
-    public Client(String name, Address address, String login) {
-        this(name, address, ClientStatus.STANDARD, Money.ZERO, login);
-    }
-
-    protected Client() {
+    public Client() {
     }
 
     public abstract boolean canAfford(Money amount);
@@ -88,22 +78,9 @@ public abstract class Client implements Serializable {
         return transactions;
     }
 
-    public boolean hasLogin(String login) {
-        return login.equals(login);
-    }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Client)) return false;
 
-        Client client = (Client) o;
-
-        return getNumber().equals(client.getNumber());
-    }
-
-    @Override
-    public int hashCode() {
-        return getNumber().hashCode();
+    public List<LightBox> getLightBoxes() {
+        return lightBoxes;
     }
 }

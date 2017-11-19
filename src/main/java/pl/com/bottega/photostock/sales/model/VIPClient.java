@@ -8,8 +8,16 @@ public class VIPClient extends Client {
     private Long creditLimitCents;
     private String creditLimitCurrency;
 
-    public VIPClient(String name, Address address, ClientStatus status, Money balance, Money creditLimit) {
-        super(name, address, status, balance, login);
+
+
+    public VIPClient(String name, Address address, Money creditLimit) {
+        super(name, address);
+        this.creditLimitCents = creditLimit.value();
+        this.creditLimitCurrency = creditLimit.currency();
+    }
+
+        public VIPClient(String name, Address address, ClientStatus status, Money balance, Money creditLimit) {
+        super(name, address, status, balance);
         this.creditLimitCents = creditLimit.value();
         this.creditLimitCurrency = creditLimit.currency();
     }
@@ -18,13 +26,13 @@ public class VIPClient extends Client {
         this(name, address, ClientStatus.VIP, Money.ZERO, Money.ZERO);
     }
 
-    public VIPClient(String name, String number, Address address, ClientStatus status, Money balance, Money creditLimit) {
-        super(name, number, address, status, balance, login);
-        this.creditLimitCents = creditLimit.value();
-        this.creditLimitCurrency = creditLimit.currency();
+    public VIPClient() {
     }
 
-    public VIPClient() {
+    public VIPClient(String name, String number, Address address, ClientStatus status, Money balance, Money creditLimit) {
+        super(name, address,status,balance);
+        this.creditLimitCents = creditLimit.value();
+        this.creditLimitCurrency = creditLimit.currency();
     }
 
 

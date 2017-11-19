@@ -1,11 +1,12 @@
 package pl.com.bottega.photostock.sales.ui;
 
+import org.springframework.stereotype.Component;
 import pl.com.bottega.photostock.sales.application.LightBoxManagement;
+import pl.com.bottega.photostock.sales.infrastructure.repositories.jparepositories.NoSuchEntityExeption;
 import pl.com.bottega.photostock.sales.model.LightBox;
 
 import java.util.List;
 import java.util.Scanner;
-
 public class LightBoxManagementScreen {
 
     private Scanner scanner;

@@ -29,7 +29,7 @@ public class Offer {
         return total;
     }
 
-    public Collection<IProduct> getItems() {
+    public Collection<Product> getItems() {
         return Collections.unmodifiableCollection(items);
     }
 

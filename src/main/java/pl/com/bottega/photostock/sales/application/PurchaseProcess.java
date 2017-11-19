@@ -1,10 +1,11 @@
 package pl.com.bottega.photostock.sales.application;
 
+import org.springframework.stereotype.Component;
 import pl.com.bottega.photostock.sales.model.*;
 import pl.com.bottega.photostock.sales.model.repositories.*;
 
 import java.util.Collection;
-
+@Component
 public class PurchaseProcess {
 
     private static final Money TOLERANCE = Money.valueOf(10);
@@ -52,8 +53,8 @@ public class PurchaseProcess {
                 Purchase purchase = clientOffer.purchase();
                 purchaseRepository.save(purchase);
                 clientRepository.save(clientOffer.getOwner());
-                Collection<IProduct> products = clientOffer.getItems();
-                for (IProduct product : products) {
+                Collection<Product> products = clientOffer.getItems();
+                for (Product product : products) {
                     product.soldPer(client);
                     productRepository.save(product);
                 }

@@ -52,7 +52,7 @@ public class CSVProductRepository implements ProductRepository, CSVRepository {
 
 
     @Override
-    public void save(IProduct product) {
+    public void save(Product product) {
         Map<Long, IProduct> products = new HashMap<>();
         if (fileExists(path))
             try (BufferedReader br = new BufferedReader(new FileReader(path))) {
@@ -83,12 +83,12 @@ public class CSVProductRepository implements ProductRepository, CSVRepository {
     }
 
     @Override
-    public List<IProduct> find(Client client, Set<String> tags, Money from, Money to) {
+    public List<Product> find(Client client, Set<String> tags, Money from, Money to) {
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            List<IProduct> results = new LinkedList<>();
+            List<Product> results = new LinkedList<>();
             String line;
             while ((line = br.readLine()) != null) {
-                IProduct product = toObject(line);
+                Product product = toObject(line);
                 if (product instanceof Picture) {
                     Picture picture = (Picture) product;
                     if (matchesCriteria(picture, client, tags, from, to))

@@ -1,6 +1,5 @@
 package pl.com.bottega.photostock.sales.model;
 
-import javax.persistence.Entity;
 
 public class Money implements Comparable<Money> {
 

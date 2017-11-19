@@ -9,6 +9,7 @@ import javax.persistence.metamodel.StaticMetamodel;
 @StaticMetamodel(LightBox.class)
 public abstract class LightBox_ {
 
+	public static volatile SingularAttribute<LightBox, Client> owner;
 	public static volatile SingularAttribute<LightBox, String> number;
 	public static volatile SingularAttribute<LightBox, String> name;
 	public static volatile ListAttribute<LightBox, Picture> items;
